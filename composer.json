@@ -1,8 +1,9 @@
 {
   "name": "shrasel/taka-to-word-converter",
-  "description": "Convert Taka amount to word or word to numeric",
+  "type": "library",
+  "description": "Convert Taka amount to word",
   "license": "MIT",
-  "keywords": ["Taka", "Taka to Word Converter", "BDT"],  
+  "keywords": ["Taka", "Taka to Word Converter", "BDT to Word"],  
   "authors": [
     {
       "name":"Shahjahan Rasel",
