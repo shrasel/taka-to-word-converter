@@ -121,7 +121,7 @@ class WordConverter {
 
     public function convert($amount)
     {
-        return $this->convertToWord($amount);
+        return $this->numToWord($amount);
     }
 
     private function convertDecimalToWord($amount)
@@ -181,22 +181,39 @@ class WordConverter {
         return $word;
     }
 
-    protected function convertToWord($amount)
+    protected function numToWord($amount)
     {        
 
-        if(is_string($amount)) {
-            throw new \Exception('Invalid Number');
+         if(!is_numeric($amount)) {
+            trigger_error(
+                'Invalid Number',
+                E_USER_WARNING
+            );
+            return false;
+        }
+
+       $amount =  number_format($amount,2,'.','');
+
+        if (($amount >= 0 && (int) $amount < 0) || (int) $amount < 0 - PHP_INT_MAX) {
+            trigger_error(
+                'WordConverter only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
+                E_USER_WARNING
+            );
+            return false;
         }
 
         $word = '';
+        
+        list($number, $fraction) = explode('.',$amount );
+        
+        $word .= $this->convertDecimalToWord($number); 
+        
+        if(!empty($word)) {
+            $word = trim($word);
+            $word .= ' taka';
+        }
 
-        $splitAmounts = preg_split("/\./", number_format($amount,2,'.',''));
-        $moneyInDigit = $splitAmounts[0];
-        $trailingDecimal = $splitAmounts[1];
-        $word .= $this->convertDecimalToWord($moneyInDigit); 
-        if(!empty($word)) $word .= 'taka';
-
-        $decimal_word = $this->convertTrailingDeciaml($trailingDecimal);
+        $decimal_word = $this->convertTrailingDeciaml($fraction);
 
         if(!empty($word) && !empty($decimal_word))
             $word .= ' and '.$decimal_word;
