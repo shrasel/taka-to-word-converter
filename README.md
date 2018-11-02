@@ -2,13 +2,13 @@
 
 ### Usage
 
-#### Step 1: Install Through Composer
+#### Install Through Composer
 ```
-composer require shrasel/taka-to-word-converter
+composer require shrasel/taka-to-word-converter dev-master
 ```
 or add this to `composer.json`
 ```
-"shrasel/taka-to-word-converter": "dev"
+"shrasel/taka-to-word-converter": "dev-master"
 ```
 then run `composer update`
 
@@ -16,7 +16,7 @@ then run `composer update`
 #### Taka To Words
 
 ```
-require_once __DIR__.'/vendor/autoload.php'
+require_once __DIR__.'/vendor/autoload.php';
 
 $obj = new \TakaToWordConverter\WordConverter();
 ```
