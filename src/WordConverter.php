@@ -3,30 +3,23 @@ namespace TakaToWordConverter;
 
 class WordConverter {
 
-    const CRORE     = 8;
-    const LAC       = 6;
-    const THOUSAND  = 4;
-    const HUNDRED   = 3;
+    private $crore     = 8;
+    private $lac       = 6;
+    private $thousand  = 4;
+    private $hundred   = 3;
+    private $currency_name = '';
+    private $suffix = '';
     
-    protected  $taka = array(
+    protected  $taka = [
         1 => 'one',
-        '01'=>'one',
         2 => 'two',
-        '02' => 'two',
         3 => 'three',
-        '03' => 'three',
         4 => 'four',
-        '04' => 'four',
         5 => 'five',
-        '05' => 'five',
         6 => 'six',
-        '06' => 'six',
         7 => 'seven',
-        '07' => 'seven',
         8 => 'eight',
-        '08' => 'eight',
         9 => 'nine',
-        '09' => 'nine',
         10 => 'ten',
         11 => 'eleven',
         12 => 'twelve',
@@ -117,10 +110,12 @@ class WordConverter {
         97 => 'ninety seven',
         98 => 'ninety eight',
         99 => 'ninety nine',
-    );
+    ];
 
-    public function convert($amount)
+    public function convert($amount,$currency = '', $suffix = '')
     {
+        $this->currency_name = $currency;
+        $this->suffix = $suffix;
         return $this->numToWord($amount);
     }
 
@@ -129,15 +124,15 @@ class WordConverter {
         $word = '';
 
         // crore
-         if( strlen($amount) >= self::CRORE  ) { 
-            $chunkLength = (strlen($amount) - ( self::CRORE - 1));
+         if( strlen($amount) >= $this->crore  ) { 
+            $chunkLength = (strlen($amount) - ( $this->crore - 1));
             $chunkAmount = substr($amount, 0, $chunkLength);
             $amount = substr($amount, $chunkLength) ;
             $word .= $this->convertDecimalToWord($chunkAmount)  . ' crore ';
         }
-        //Lac
-        if( strlen($amount) >= self::LAC ) { // lac
-            $chunkLength = (strlen($amount) - ( self::LAC - 1));
+        // lac
+        if( strlen($amount) >= $this->lac ) { 
+            $chunkLength = (strlen($amount) - ( $this->lac - 1));
             $chunkAmount = substr($amount, 0, $chunkLength );
             $amount = substr($amount, $chunkLength) ;
             if( $chunkAmount > 0 ) {
@@ -145,18 +140,18 @@ class WordConverter {
             }
 
         }
-        // Thousand
-        if( strlen($amount) >= self::THOUSAND ) { // thousand
-            $chunkLength = (strlen($amount) - ( self::THOUSAND - 1));
+        // thousand
+        if( strlen($amount) >= $this->thousand ) { 
+            $chunkLength = (strlen($amount) - ( $this->thousand - 1));
             $chunkAmount = substr($amount, 0, $chunkLength );
             $amount = substr($amount, $chunkLength) ;
             if( $chunkAmount > 0 ) {
                 $word .= $this->taka[$chunkAmount * 1] . ' thousand ';
             }
         }
-        // Hundred
-        if( strlen($amount) >= self::HUNDRED ) {
-            $chunkLength = (strlen($amount) - ( self::HUNDRED - 1));
+        // hundred
+        if( strlen($amount) >= $this->hundred ) {
+            $chunkLength = (strlen($amount) - ( $this->hundred - 1));
             $chunkAmount = substr($amount, 0, $chunkLength );
             $amount = substr($amount, $chunkLength) ;
             if( $chunkAmount > 0 ) {
@@ -165,7 +160,7 @@ class WordConverter {
         }
 
         if( $amount > 0 ) {
-            $word .= $this->taka[$amount * 1];
+            $word .= $this->taka[(int)$amount * 1];
         }
         
         return $word;
@@ -174,9 +169,10 @@ class WordConverter {
     private function convertTrailingDeciaml($number)
     {
         $word = '';
+        
         if( isset($number) ) {
             if((int)$number>0)
-                $word .= $this->taka[$number] . ' poisa';
+                $word .= $this->taka[(int)$number] . ' poisa';
         }
         return $word;
     }
@@ -206,11 +202,12 @@ class WordConverter {
         
         list($number, $fraction) = explode('.',$amount );
         
+
         $word .= $this->convertDecimalToWord($number); 
         
         if(!empty($word)) {
             $word = trim($word);
-            $word .= ' taka';
+            if(!empty($this->currency_name)) $word .= ' '.$this->currency_name;
         }
 
         $decimal_word = $this->convertTrailingDeciaml($fraction);
@@ -220,7 +217,7 @@ class WordConverter {
         if(empty($word) && !empty($decimal_word))
             $word .= $decimal_word;
 
-        if(!empty($word)) $word .= ' only';
+        if(!empty($word) && !empty($this->suffix)) $word .= ' '.$this->suffix;
 
         return $word;
     }
