@@ -112,11 +112,15 @@ class WordConverter {
         99 => 'ninety nine',
     ];
 
-    public function convert($amount,$currency = '', $suffix = '')
+    public function convert($amount,$currency = 'taka')
     {
         $this->currency_name = $currency;
-        $this->suffix = $suffix;
         return $this->numToWord($amount);
+    }
+
+    public function setSuffix($value='')
+    {
+        $this->suffix = $value;
     }
 
     private function convertDecimalToWord($amount)
@@ -172,7 +176,7 @@ class WordConverter {
         
         if( isset($number) ) {
             if((int)$number>0)
-                $word .= $this->taka[(int)$number] . ' poisa';
+                $word .= $this->taka[(int)$number] . ($this->currency_name?' poisa':'');
         }
         return $word;
     }

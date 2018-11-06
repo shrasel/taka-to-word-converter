@@ -16,55 +16,58 @@ class WordConverterTest extends  TestCase{
 	public function testMoreThanCrore() {
 		$num = 3104007200;
 		$word = 'Three Hundred Ten Crore Forty Lac Seven Thousand Two Hundred Taka Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka','only' ) ));
+		$this->wct->setSuffix('only');
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
 	}
 
 	public function testMoreThanLac() {
 		$num = 4007200;
 		$word = 'Forty Lac Seven Thousand Two Hundred Taka Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka','only') ));
+		$this->wct->setSuffix('only');
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka') ));
 	}
 
 	public function testZoro() {
 		$num = 0;
 		$word = '';
-		$this->assertEquals( $word, ucwords($this->wct->convert( $num,'taka','only' ) ));
+		$this->wct->setSuffix('only');
+		$this->assertEquals( $word, ucwords($this->wct->convert( $num,'taka' ) ));
 	}
 
 	public function testOnlyDecimalNumber() {
 		$num = .32;
-		$word = 'Thirty Two Poisa Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka','only' ) ));
+		$word = 'Thirty Two Poisa';
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
 	}
 
 	public function testSmallFloatNumber() {
 		$num = 1.32;
-		$word = 'One Taka And Thirty Two Poisa Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert( $num,'taka','only' ) ));
+		$word = 'One Taka And Thirty Two Poisa';
+		$this->assertEquals( $word, ucwords($this->wct->convert( $num ) ));
 	}
 
 	public function testTakaWithDecimalNumber() {
 		$num = 103.32;
-		$word = 'One Hundred Three Taka And Thirty Two Poisa Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka','only' ) ));
+		$word = 'One Hundred Three Taka And Thirty Two Poisa';
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
 	}
 
 	public function testSmallDecimalNumber() {
 		$num = 103.02;
-		$word = 'One Hundred Three Taka And Two Poisa Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert( $num,'taka','only' ) ));
+		$word = 'One Hundred Three Taka And Two Poisa';
+		$this->assertEquals( $word, ucwords($this->wct->convert( $num ) ));
 	}
 
 	public function testSmallAmount() {
 		$num = '10';
-		$word = 'Ten Taka Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka','only' ) ));
+		$word = 'Ten Taka';
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
 	}
 
 	public function testHundredSmallAmount() {
 		$num = '100.99';
-		$word = 'One Hundred Taka And Ninety Nine Poisa Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'taka','only' ) ));
+		$word = 'One Hundred Taka And Ninety Nine Poisa';
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
 	}
 
 	public function testWithoutCurrencyNameAndSuffix() {
@@ -72,21 +75,16 @@ class WordConverterTest extends  TestCase{
 		$num = '10';
 		
 		$word = 'Ten';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num, '' ) ));
 		
-		$word = 'Ten Taka';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'Taka' ) ));
-		
-		$word = 'Ten Taka Only';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'Taka','only' ) ));
 		
 		$num = .10;
 		$word = 'Ten Poisa';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num,'Taka' ) ));
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num  ) ));
 
 		$num = .01;
 		$word = 'One Poisa';
-		$this->assertEquals( $word, ucwords($this->wct->convert(  $num ) ));
+		$this->assertEquals( $word, ucwords($this->wct->convert(  $num  ) ));
 
 		$taka = array(
 	        1 => 'one',
@@ -191,7 +189,7 @@ class WordConverterTest extends  TestCase{
     	);
 
     	foreach($taka as $number=>$word){
-    		$this->assertEquals( $word, $this->wct->convert(  $number ) );
+    		$this->assertEquals( $word, $this->wct->convert(  $number, '' ) );
     	}
 	}
 	
